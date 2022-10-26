@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "ea2848bc-8e51-49a7-bf0e-4573a67fe09c",
+		"name": "GITHUBAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17319331"
+	},
+	"item": [
+		{
+			"name": "Criar Repositorio",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"Random Name Repo\", pm.variables.replaceIn('{{$randomDepartment}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201 - Repositorio Criado com Sucesso\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"{{Random Name Repo}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{giturl}}/user/repos",
+					"host": [
+						"{{giturl}}"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Repositorio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 - Consulta ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Valida Nome do Repositorio\", function () {\r",
+							"    pm.expect(pm.response.json().full_name).to.contain(pm.variables.get(\"Random Name Repo\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Valida Nome do Owner\", function () {\r",
+							"    pm.expect(pm.response.json().owner.login).to.eq(\"ZitrusDesafio\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{giturl}}/repos/ZitrusDesafio/{{Random Name Repo}}",
+					"host": [
+						"{{giturl}}"
+					],
+					"path": [
+						"repos",
+						"ZitrusDesafio",
+						"{{Random Name Repo}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Issue",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"Random Body Issue\", pm.variables.replaceIn('{{$randomPhrase}}'))\r",
+							"pm.globals.set(\"Random Name Issue\", pm.variables.replaceIn('{{$randomBankAccountName}}'))\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201 - Issue Criada com Sucesso\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.globals.set(\"Number Issue\", pm.response.json().number);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\":\"{{Random Name Issue}}\",\r\n\"body\":\"{{Random Body Issue}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{giturl}}/repos/ZitrusDesafio/{{Random Name Repo}}/issues",
+					"host": [
+						"{{giturl}}"
+					],
+					"path": [
+						"repos",
+						"ZitrusDesafio",
+						"{{Random Name Repo}}",
+						"issues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 - Consulta Ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Valida Titulo da Issue\", function () {\r",
+							"    pm.expect(pm.response.json().title).to.eql(pm.variables.get(\"Random Name Issue\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Valida Descrição da Issue\", function () {\r",
+							"    pm.expect(pm.response.json().body).to.eql(pm.variables.get(\"Random Body Issue\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{giturl}}/repos/ZitrusDesafio/{{Random Name Repo}}/issues/{{Number Issue}}",
+					"host": [
+						"{{giturl}}"
+					],
+					"path": [
+						"repos",
+						"ZitrusDesafio",
+						"{{Random Name Repo}}",
+						"issues",
+						"{{Number Issue}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Repositorio",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 - Repositorio Deletado com Sucesso\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{giturl}}/repos/ZitrusDesafio/{{Random Name Repo}}",
+					"host": [
+						"{{giturl}}"
+					],
+					"path": [
+						"repos",
+						"ZitrusDesafio",
+						"{{Random Name Repo}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Repositorio Eliminado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404 - Repositorio não Encontrado\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Not Found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{giturl}}/repos/ZitrusDesafio/{{Random Name Repo}}",
+					"host": [
+						"{{giturl}}"
+					],
+					"path": [
+						"repos",
+						"ZitrusDesafio",
+						"{{Random Name Repo}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "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",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "giturl",
+			"value": "https://api.github.com",
+			"type": "string"
+		}
+	]
+}
